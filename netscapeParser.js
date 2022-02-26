@@ -1,114 +1,139 @@
 const netscapeParser = {
-	bookmarksDOM: null,
+	itteration: 0,
+	level: -1,
+
+	positions: {
+		lvlUp: 0,
+		lvlDown: 0,
+		targetStart: 0,
+		targetEnd: 0,
+	},
+
+	tags: {
+		DT: '<DT>',
+		DLOpen: '<DL>',
+		DLClose: '</DL>',
+		targetOpeningTagsLength: 2,
+		folderOpen: '<H',
+		linkOpen: '<A',
+		folderClose: '</H3>',
+		linkClose: '</A>',
+	},
+
+	parseTree: null,
 
 	/**
-	 * Converts "text/html" file to DOM and
-	 * with it invokes traverseDOM function.
-	 * @param {File} htmlFile Netscape text/html mimeType file to traverse
-	 * @param {Function} midFunction Passed to traverseDOM method
+	 * Parses Netscape Bookmarks text file and returns a JSON parse tree.
+	 * Optionaly pass midFunction which will get individual JSON nodes.
+	 * @param {String} htmlString Netscape Bookmarks string to traverse
+	 * @param {Function} midFunction Optional user defined function.
+	 * 								 If not provided, the default function
+	 * 								 will create a parse tree
 	 * @returns {Promise} (Promise)
 	 */
-	async traversHTML(htmlFile, midFunction) {
-		const reader = new FileReader()
+	parseFromString(htmlString, midFunction = this.createParseTree) {
+		this.positions.lvlUp = htmlString.indexOf(this.tags.DLOpen)
+		this.positions.lvlDown = htmlString.indexOf(this.tags.DLClose)
 
-		return new Promise((resolve, reject) => {
-			reader.onerror = () => {
-				reader.abort()
-				reject(new DOMException('Problem reading imported file.'))
+		return new Promise(async (resolve, reject) => {
+			let tag = null
+			let node = null
+
+			while ((tag = this.getNextValidTag(htmlString))) {
+				// node = returnAsObject(tag)
+				// midFunction(node)
 			}
-
-			reader.onload = () => {
-				const domParser = new DOMParser()
-
-				this.bookmarksDOM = domParser.parseFromString(reader.result, 'text/html')
-
-				const errorNode = this.bookmarksDOM.querySelector('parsererror')
-				if (errorNode) {
-					reject(new DOMException('Problem parsing imported file.'))
-				} else {
-					// start treversal
-					resolve(this.traverseDOM(midFunction))
-				}
-			}
-
-			reader.readAsText(htmlFile, 'utf-8')
+			console.log(this.itteration)
+			resolve(this.parseTree)
 		})
 	},
 
-	/**
-	 * Converts <a>/<h3> element to an object and
-	 * passes it to the midFunction as an argument.
-	 * @param {Document} document
-	 * @param {Function} midFunction
-	 * @returns {String} ('EOT') - End Of Traversal
-	 */
-	async traverseDOM(midFunction) {
-		let level = 0
-		let element = this.bookmarksDOM.querySelector('dt')
+	getNextValidTag(htmlString) {
+		let tag = null
 
-		// <p> is surplus
-		this.bookmarksDOM.querySelectorAll('p').forEach((tag) => tag.remove())
+		this.positions.targetStart = htmlString.indexOf(
+			this.tags.DT,
+			this.positions.targetStart + 1
+		)
 
-		while (level >= 0) {
-			const child = element.firstElementChild
-			if (child.tagName === 'H3') {
-				const folderObj = this.returnAsObject(child, level)
+		while (
+			this.positions.targetStart > this.positions.lvlUp &&
+			this.positions.lvlUp !== -1
+		) {
+			this.level++
 
-				await midFunction(folderObj)
-
-				if (
-					child.nextElementSibling.tagName === 'DL' &&
-					child.nextElementSibling.firstElementChild
-				) {
-					element = child.nextElementSibling.firstElementChild
-					level++
-					continue
-				}
-			} else if (child.tagName === 'A') {
-				const linkObj = this.returnAsObject(child, level)
-
-				await midFunction(linkObj)
-			}
-
-			// Climbing down the tree untill sibling parent element exists
-			while (element && !element.nextElementSibling) {
-				element = this.findParentElement(element)
-				level--
-			}
-
-			if (element) element = element.nextElementSibling
+			this.positions.lvlUp = htmlString.indexOf(
+				this.tags.DLOpen,
+				this.positions.lvlUp + 1
+			)
 		}
 
-		return 'EOT'
+		while (
+			this.positions.targetStart > this.positions.lvlDown &&
+			this.positions.lvlDown !== -1
+		) {
+			this.level--
+
+			this.positions.lvlDown = htmlString.indexOf(
+				this.tags.DLClose,
+				this.positions.lvlDown + 1
+			)
+		}
+
+		if (this.positions.targetStart !== -1) {
+			const tagType = htmlString.substr(
+				this.positions.targetStart + this.tags.DT.length,
+				this.tags.targetOpeningTagsLength
+			)
+
+			if (tagType === this.tags.linkOpen) {
+				this.positions.targetEnd =
+					htmlString.indexOf(
+						this.tags.linkClose,
+						this.positions.targetStart
+					) + this.tags.linkClose.length
+			} else if (tagType === this.tags.folderOpen) {
+				this.positions.targetEnd =
+					htmlString.indexOf(
+						this.tags.folderClose,
+						this.positions.targetStart
+					) + this.tags.folderClose.length
+			} else {
+				console.error('Invalid tag type!')
+				return null
+			}
+
+			tag = htmlString.substring(
+				this.positions.targetStart + this.tags.DT.length,
+				this.positions.targetEnd
+			)
+		}
+		this.itteration++
+		// console.log(this.itteration++)
+
+		// console.log('Level: ', this.level)
+		// console.log(tag)
+		return tag
 	},
 
-	returnAsObject(bookmarkElem, level) {
+	returnAsObject(bookmarkTag, level) {
 		let bookmarkObj = {
-			title: bookmarkElem.innerText,
+			title: bookmarkTag.innerText,
 			attributes: {},
 			level: level,
-			element: bookmarkElem,
+			element: bookmarkTag,
 		}
 
-		if ((bookmarkObj.parentElement = this.findParentElement(bookmarkElem)))
+		if ((bookmarkObj.parentElement = this.findParentElement(bookmarkTag)))
 			bookmarkObj.parentElement = bookmarkObj.parentElement.firstElementChild // <H1> or <H3>
 
-		for (const attr of bookmarkElem.attributes)
+		for (const attr of bookmarkTag.attributes)
 			bookmarkObj.attributes[attr.name] = attr.value
 
 		return bookmarkObj
 	},
 
-	findParentElement(element) {
-		while (
-			(element = element.parentElement) &&
-			element.tagName !== 'DT' &&
-			element.tagName !== 'BODY'
-		)
-			continue
-
-		return element && element.tagName === 'DT' ? element : null
-	},
+	createParseTree(node) {},
 
 	/**
 	 * Traverses bookmarks JSON object, converts every node to an element and
@@ -147,7 +172,8 @@ const netscapeParser = {
 				childIndex = null
 				childrenArr = null
 				tabNum = parentsArr.length
-				netscapeStr += '\n' + ' '.repeat(tabNum * this.tabSpaces) + '</DL><p>'
+				netscapeStr +=
+					'\n' + ' '.repeat(tabNum * this.tabSpaces) + '</DL><p>'
 			}
 		}
 
@@ -158,12 +184,12 @@ const netscapeParser = {
 		const newlineIndent = '\n' + ' '.repeat(tabNum * this.tabSpaces)
 
 		// TO DO: make attributes optional when setting up the parser
-		if (this.elementAttributes) {
+		if (this.tagAttrToNodeProp) {
 			var attributes = ''
-			for (const attr in this.elementAttributes) {
+			for (const attr in this.tagAttrToNodeProp) {
 				for (const prop in jsonNode) {
 					attributes +=
-						prop === this.elementAttributes[attr]
+						prop === this.tagAttrToNodeProp[attr]
 							? ` ${attr}="${jsonNode[prop]}"`
 							: ''
 				}
@@ -185,7 +211,7 @@ const netscapeParser = {
 <Title>Bookmarks</Title>
 <H1>Bookmarks</H1>`,
 
-	elementAttributes: {
+	tagAttrToNodeProp: {
 		ADD_DATE: 'dateAdded',
 		LAST_VISIT: 'dateLastVisited',
 		LAST_MODIFIED: 'dateGroupModified',
