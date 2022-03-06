@@ -1,8 +1,4 @@
 const globals = {
-	nodeNum: 0,
-
-	level: -1,
-
 	positions: {
 		lvlUp: -1,
 		lvlDown: -1,
@@ -22,12 +18,11 @@ const globals = {
 	},
 
 	attr_prop: {
-		ADD_DATE: 'date_added',
+		ADD_DATE: 'dateAdded',
 		LAST_VISIT: 'dateLastVisited',
-		LAST_MODIFIED: 'date_modified',
+		LAST_MODIFIED: 'dateModified',
 		PERSONAL_TOOLBAR_FOLDER: 'personalToolbarFolder',
 		HREF: 'url',
-		ICON: 'icon',
 	},
 }
 

@@ -1,7 +1,7 @@
 import globals from './globals.js'
 
-let attr_prop = globals.attr_prop
-let nodeTitleProperty = 'title'
+const attr_prop = globals.attr_prop
+const nodeTitleProperty = 'title'
 
 const netscapeHeader = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
 <!--This is an automatically generated file.
@@ -11,21 +11,26 @@ const netscapeHeader = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
 <Title>Bookmarks</Title>
 <H1>Bookmarks</H1>`
 
+let nodeNum = 0
+
 /**
- * Traverses bookmarks JSON object, converts every node to an element and
- * populates the bookmarksDOM in JSON object structure order.
- * @param {JSON} json JSON object.
- * @param {Number} tabSpaces Defaults to 4 spaces per tab (optional).
- * @returns {String}  A string in Netscape Bookmarks File Format.
+ * Traverses JSON tree, converts every valid node to an element string and
+ * returns a Netscape Bookmarks File Format string.
+ *
+ * @param {JSON} json - JSON object.
+ * @param {Boolean} header - Decide if netscape header is included. Defaults to true.
+ * @param {Number} tabSpaces - Spaces per tab. Defaults to 4.
+ *
+ * @returns {String}  Netscape Bookmarks File Format string.
  */
-function JSONToNetscape(json, tabSpaces = 4, header = true) {
+function JSONToNetscape(json, header = true, tabSpaces = 4) {
 	let parentsArr = [json]
 	let child = null
 	let childIndex = null
 	let childrenArr = null
-
 	let tabNum = parentsArr.length
 	let netscapeStr = ''
+
 	if (header) netscapeStr = netscapeHeader + '\n<DL><p>'
 
 	while (tabNum) {
@@ -54,21 +59,18 @@ function JSONToNetscape(json, tabSpaces = 4, header = true) {
 		}
 	}
 
-	return netscapeStr
+	return { netscapeStr: netscapeStr, nodeNum: nodeNum }
 }
 
 function returnAsElementString(jsonNode, tabNum, tabSpaces) {
-	let title = 'Unnamed'
+	nodeNum++
+
 	const newlineIndent = '\n' + ' '.repeat(tabNum * tabSpaces)
 
-	// TO DO: make attributes optional when setting up the parser
-	if (attr_prop) {
-		var attributes = ''
-		for (const prop in jsonNode) {
-			for (const attr in attr_prop) {
-				attributes +=
-					prop === attr_prop[attr] ? ` ${attr}="${jsonNode[prop]}"` : ''
-			}
+	var attributes = ''
+	for (const prop in jsonNode) {
+		for (const attr in attr_prop) {
+			attributes += prop === attr_prop[attr] ? ` ${attr}="${jsonNode[prop]}"` : ''
 		}
 	}
 

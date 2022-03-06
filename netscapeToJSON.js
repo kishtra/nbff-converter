@@ -1,25 +1,28 @@
 import globals from './globals.js'
-
-let nodeNum = globals.nodeNum
-let level = globals.level
-let positions = globals.positions
-let tags = globals.tags
-let attr_prop = globals.attr_prop
-
+let nodeNum = 0
+let level = -1
 let result = []
+
+let positions = globals.positions
+const attr_prop = globals.attr_prop
+const tags = globals.tags
 
 /**
  * Parses Netscape Bookmarks File Format string and returns a JSON parse tree.
  * Optionaly pass a midFunction which will be invoked for every valid
- * bookmark/folder tag with corresponding bookmark/folder object node as argument.
- * @param {String} htmlString Netscape Bookmarks File Format string to traverse.
- * @param {Function} midFunction Optional user defined function.
- * 								 If not provided, the default function
- * 								 will create a parse tree.
- * @returns {Promise} (Promise) onResolved: an object with
- * 					  'children' and 'nodeNum' properties.
+ * bookmark/folder tag with corresponding bookmark/folder object node as an argument.
+ *
+ * @param {String} htmlString Netscape Bookmarks File Format string to convert.
+ * @param {Function} midFunction Optional user defined function. Takes one object
+ * 								 argument for every valid bookmark tag.
+ * 								 If not provided, the default function will create
+ * 								 and return a parse tree.
+ *
+ * @returns {Promise} (Promise):
+ * - onResolved: Parse tree object with 'children' and 'nodeNum' properties.
+ * - onRejected: TO DO!
  */
-function netscapeToJSON(htmlString, midFunction = createParseTree.bind()) {
+function netscapeToJSON(htmlString, midFunction = createParseTree) {
 	positions.lvlUp = htmlString.indexOf(tags.DLOpen)
 	positions.lvlDown = htmlString.indexOf(tags.DLClose)
 
@@ -33,9 +36,6 @@ function netscapeToJSON(htmlString, midFunction = createParseTree.bind()) {
 		}
 
 		onResolved({ children: result, nodeNum: nodeNum })
-
-		result = []
-		level = -1
 	})
 }
 
@@ -97,12 +97,11 @@ function returnAsObject(bookmarkTagStr) {
 		if ((attrStart = bookmarkTagStr.indexOf(attr)) !== -1) {
 			attrValStart = attrStart + attr.length + '="'.length
 			attrValEnd = bookmarkTagStr.indexOf('"', attrValStart)
-			bookmarkObj[attr_prop[attr]] = bookmarkTagStr.substring(
-				attrValStart,
-				attrValEnd
-			)
+			bookmarkObj[attr_prop[attr]] = bookmarkTagStr.substring(attrValStart, attrValEnd)
 		}
 	}
+
+	bookmarkObj.type = bookmarkObj.url ? 'url' : 'folder'
 
 	titleStart = bookmarkTagStr.indexOf('>') + 1
 	titleEnd = bookmarkTagStr.indexOf('<', titleStart)
@@ -115,18 +114,18 @@ function createParseTree(node) {
 	let lastParent = null
 
 	while (
-		(lastParent = result.length ? result[result.length - 1] : { level: -1 })
-			.level >= node.level &&
+		(lastParent = result.length ? result[result.length - 1] : { level: -1 }).level >=
+			node.level &&
 		lastParent.level !== 0
 	)
 		result.pop()
 
 	if (node.level > 0) lastParent.children.push(node)
 
-	if (!node.url) {
+	if (node.type === 'folder') {
 		node.children = []
 		result.push(node)
-	} else if (node.level === 0) result.push(node)
+	} else if (node.type === 'url' && node.level === 0) result.push(node)
 }
 
 export default netscapeToJSON
