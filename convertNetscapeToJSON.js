@@ -32,7 +32,7 @@ const TAGS = {
  * 								 If not provided, the default function will create
  * 								 and return a parse tree.
  *
- * @returns {Promise} (Promise):
+ * @returns {Promise}
  * - onResolved: Parse tree object with 'children' and 'numOfNodes' properties.
  * - onRejected: TO DO!
  */

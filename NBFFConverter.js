@@ -1,5 +1,5 @@
-import convertJSONToNetscape from './JSONToNetscape.js'
-import convertNetscapeToJSON from './netscapeToJSON.js'
+import convertJSONToNetscape from './convertJSONToNetscape.js'
+import convertNetscapeToJSON from './convertNetscapeToJSON.js'
 
 /** Netscape Bookmarks File Format converter. */
 class NBFFConverter {
@@ -58,12 +58,12 @@ class NBFFConverter {
 	 * @param {Boolean} header - Decide if netscape header is included. Defaults to true.
 	 * @param {Number} tabSpaces - Spaces per tab. Defaults to 4.
 	 *
-	 * @returns {String}  Netscape Bookmarks File Format string.
+	 * @returns {Promise}
 	 */
-	JSONToNetscape(json, header = true, tabSpaces = 4) {
+	async JSONToNetscape(json, header = true, tabSpaces = 4) {
 		let NBFFHeader = ''
 		if (header) NBFFHeader = this.#NBFFHeader
-		return convertJSONToNetscape(json, NBFFHeader, tabSpaces, this.#NBFFjsonModel)
+		return await convertJSONToNetscape(json, NBFFHeader, tabSpaces, this.#NBFFjsonModel)
 	}
 
 	/**
@@ -81,8 +81,8 @@ class NBFFConverter {
 	 * - onResolved: Parse tree object with 'children' and 'numOfNodes' properties.
 	 * - onRejected: TO DO!
 	 */
-	netscapeToJSON(htmlString, midFunction) {
-		return convertNetscapeToJSON(htmlString, midFunction, this.#NBFFjsonModel)
+	async netscapeToJSON(htmlString, midFunction) {
+		return await convertNetscapeToJSON(htmlString, midFunction, this.#NBFFjsonModel)
 	}
 }
 
