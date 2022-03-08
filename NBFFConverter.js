@@ -1,5 +1,5 @@
-import convertJSONToNetscape from './convertJSONToNetscape.js'
-import convertNetscapeToJSON from './convertNetscapeToJSON.js'
+import JSONToNBFF from './JSONToNBFF.js'
+import NBFFToJSON from './NBFFToJSON.js'
 
 /** Netscape Bookmarks File Format converter. */
 class NBFFConverter {
@@ -63,7 +63,7 @@ class NBFFConverter {
 	async JSONToNetscape(json, header = true, tabSpaces = 4) {
 		let NBFFHeader = ''
 		if (header) NBFFHeader = this.#NBFFHeader
-		return await convertJSONToNetscape(json, NBFFHeader, tabSpaces, this.#NBFFjsonModel)
+		return await JSONToNBFF(json, NBFFHeader, tabSpaces, this.#NBFFjsonModel)
 	}
 
 	/**
@@ -82,7 +82,7 @@ class NBFFConverter {
 	 * - onRejected: TO DO!
 	 */
 	async netscapeToJSON(htmlString, midFunction) {
-		return await convertNetscapeToJSON(htmlString, midFunction, this.#NBFFjsonModel)
+		return await NBFFToJSON(htmlString, midFunction, this.#NBFFjsonModel)
 	}
 }
 

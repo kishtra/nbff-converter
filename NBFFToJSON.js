@@ -36,7 +36,7 @@ const TAGS = {
  * - onResolved: Parse tree object with 'children' and 'numOfNodes' properties.
  * - onRejected: TO DO!
  */
-function convertNetscapeToJSON(htmlString, midFunction = createParseTree, attrProp) {
+function NBFFToJSON(htmlString, midFunction = createParseTree, attrProp) {
 	NBFFjsonModel = attrProp
 	POSITIONS.lvlUp = htmlString.indexOf(TAGS.DLOpen)
 	POSITIONS.lvlDown = htmlString.indexOf(TAGS.DLClose)
@@ -146,4 +146,4 @@ function createParseTree(node) {
 	} else if (node.type === 'url' && node.level === 0) result.push(node)
 }
 
-export default convertNetscapeToJSON
+export default NBFFToJSON

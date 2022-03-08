@@ -10,7 +10,7 @@ let NBFFjsonModel
  *
  * @returns {Promise}
  */
-function convertJSONToNetscape(json, NBFFHeader, tabSpaces = 4, attrProp) {
+function JSONToNBFF(json, NBFFHeader, tabSpaces = 4, attrProp) {
 	NBFFjsonModel = attrProp
 
 	return new Promise(async (onResolved, onRejected) => {
@@ -75,4 +75,4 @@ function returnAsElementString(jsonNode, tabNum, tabSpaces) {
 	}
 }
 
-export default convertJSONToNetscape
+export default JSONToNBFF
