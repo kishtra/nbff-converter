@@ -9,11 +9,13 @@ let NBFFjsonModel
  * @param {Number} tabSpaces - Spaces per tab. Defaults to 4.
  *
  * @returns {Promise}
+ * - resolve: { NBFFString, numOfNodes }
+ * - reject: TO DO!
  */
 function JSONToNBFF(json, NBFFHeader, tabSpaces = 4, attrProp) {
 	NBFFjsonModel = attrProp
 
-	return new Promise(async (onResolved, onRejected) => {
+	return new Promise((resolve, reject) => {
 		let parentsArr = [json]
 		let child = null
 		let childIndex = null
@@ -49,7 +51,7 @@ function JSONToNBFF(json, NBFFHeader, tabSpaces = 4, attrProp) {
 			}
 		}
 
-		onResolved({ NBFFString: NBFFString, numOfNodes: numOfNodes })
+		resolve({ NBFFString: NBFFString, numOfNodes: numOfNodes })
 	})
 }
 

@@ -26,69 +26,72 @@ const TAGS = {
  * Optionaly pass a midFunction which will be invoked for every valid
  * bookmark/folder tag with corresponding bookmark/folder object node as an argument.
  *
- * @param {String} htmlString Netscape Bookmarks File Format string to convert.
+ * @param {String} nbffString Netscape Bookmarks File Format string to convert.
  * @param {Function} midFunction Optional user defined function. Takes one object
  * 								 argument for every valid bookmark tag.
  * 								 If not provided, the default function will create
  * 								 and return a parse tree.
  *
  * @returns {Promise}
- * - onResolved: Parse tree object with 'children' and 'numOfNodes' properties.
- * - onRejected: TO DO!
+ * - resolve: { [NBFFjsonModel.CHILDREN], numOfNodes }
+ * - reject: TO DO!
  */
-function NBFFToJSON(htmlString, midFunction = createParseTree, attrProp) {
+function NBFFToJSON(nbffString, midFunction = createParseTree, attrProp) {
 	NBFFjsonModel = attrProp
-	POSITIONS.lvlUp = htmlString.indexOf(TAGS.DLOpen)
-	POSITIONS.lvlDown = htmlString.indexOf(TAGS.DLClose)
 
-	return new Promise(async (onResolved, onRejected) => {
+	POSITIONS.lvlUp = nbffString.indexOf(TAGS.DLOpen)
+	POSITIONS.lvlDown = nbffString.indexOf(TAGS.DLClose)
+
+	return new Promise(async (resolve, reject) => {
 		let tag = null
 		let node = null
 
-		while ((tag = getNextValidTag(htmlString))) {
+		while ((tag = getNextValidTag(nbffString)) !== null) {
 			node = returnAsObject(tag)
 			await midFunction(node)
 		}
 
-		onResolved({ [NBFFjsonModel.CHILDREN]: result, numOfNodes: numOfNodes })
+		resolve({ [NBFFjsonModel.CHILDREN]: result, numOfNodes: numOfNodes })
 	})
 }
 
-function getNextValidTag(htmlString) {
+function getNextValidTag(nbffString) {
 	let tag = null
 
-	POSITIONS.targetStart = htmlString.indexOf(TAGS.DT, POSITIONS.targetStart + 1)
+	POSITIONS.targetStart = nbffString.indexOf(TAGS.DT, POSITIONS.targetStart + 1)
 
 	while (POSITIONS.targetStart > POSITIONS.lvlUp && POSITIONS.lvlUp !== -1) {
 		level++
-		POSITIONS.lvlUp = htmlString.indexOf(TAGS.DLOpen, POSITIONS.lvlUp + 1)
+		POSITIONS.lvlUp = nbffString.indexOf(TAGS.DLOpen, POSITIONS.lvlUp + 1)
 	}
 
 	while (POSITIONS.targetStart > POSITIONS.lvlDown && POSITIONS.lvlDown !== -1) {
 		level--
-		POSITIONS.lvlDown = htmlString.indexOf(TAGS.DLClose, POSITIONS.lvlDown + 1)
+		POSITIONS.lvlDown = nbffString.indexOf(TAGS.DLClose, POSITIONS.lvlDown + 1)
 	}
 
 	if (POSITIONS.targetStart !== -1) {
-		const tagType = htmlString.substr(
+		const tagType = nbffString.substr(
 			POSITIONS.targetStart + TAGS.DT.length,
 			TAGS.targetsOpeningTagLength
 		)
 
 		if (tagType === TAGS.linkOpen) {
 			POSITIONS.targetEnd =
-				htmlString.indexOf(TAGS.linkClose, POSITIONS.targetStart) +
+				nbffString.indexOf(TAGS.linkClose, POSITIONS.targetStart) +
 				TAGS.linkClose.length
 		} else if (tagType === TAGS.folderOpen) {
 			POSITIONS.targetEnd =
-				htmlString.indexOf(TAGS.folderClose, POSITIONS.targetStart) +
+				nbffString.indexOf(TAGS.folderClose, POSITIONS.targetStart) +
 				TAGS.folderClose.length
 		} else {
-			console.error('Invalid tag type!')
+			console.error(
+				`Invalid tag type at index [${POSITIONS.targetStart + TAGS.DT.length}]!`
+			)
 			return null
 		}
 
-		tag = htmlString.substring(
+		tag = nbffString.substring(
 			POSITIONS.targetStart + TAGS.DT.length,
 			POSITIONS.targetEnd
 		)

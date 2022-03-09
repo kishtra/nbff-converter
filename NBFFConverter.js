@@ -25,8 +25,6 @@ class NBFFConverter {
 		return this.#NBFFHeader
 	}
 
-	result = null
-
 	/**
 	 * Create a Netscape Bookmarks File Format converter.
 	 * @param {Object} NBFFjsonModel Defines created/expected JSON object key names.
@@ -40,9 +38,9 @@ class NBFFConverter {
 	 * - PERSONAL_TOOLBAR_FOLDER: 'personalToolbarFolder'
 	 */
 	constructor(NBFFjsonModel = {}) {
-		if (typeof NBFFjsonModel !== 'object') {
-			throw new Error('Invalid argument type')
-		}
+		if (typeof NBFFjsonModel !== 'object')
+			throw new TypeError('Invalid constructor argument type.')
+
 		for (const usrKey in NBFFjsonModel) {
 			for (const privKey in this.#NBFFjsonModel) {
 				if (usrKey === privKey) this.#NBFFjsonModel[privKey] = NBFFjsonModel[usrKey]
@@ -59,10 +57,19 @@ class NBFFConverter {
 	 * @param {Number} tabSpaces - Spaces per tab. Defaults to 4.
 	 *
 	 * @returns {Promise}
+	 * - resolve: { NBFFString, numOfNodes }
+	 * - reject: TO DO!
 	 */
 	async JSONToNetscape(json, header = true, tabSpaces = 4) {
+		if (typeof json !== 'object')
+			throw new TypeError('(json) argument must be of type Object')
+		else if (!json[this.#NBFFjsonModel.CHILDREN]) {
+			throw new ReferenceError('(json) argument must have "children" property')
+		}
+
 		let NBFFHeader = ''
 		if (header) NBFFHeader = this.#NBFFHeader
+
 		return await JSONToNBFF(json, NBFFHeader, tabSpaces, this.#NBFFjsonModel)
 	}
 
@@ -71,18 +78,21 @@ class NBFFConverter {
 	 * Optionaly pass a midFunction which will be invoked for every valid
 	 * bookmark/folder tag with corresponding bookmark/folder object node as an argument.
 	 *
-	 * @param {String} htmlString Netscape Bookmarks File Format string to convert.
+	 * @param {String} nbffString Netscape Bookmarks File Format string to convert.
 	 * @param {Function} midFunction Optional user defined function. Takes one object
 	 * 								 argument for every valid bookmark tag.
 	 * 								 If not provided, the default function will create
 	 * 								 and return a parse tree.
 	 *
-	 * @returns {Promise} (Promise):
-	 * - onResolved: Parse tree object with 'children' and 'numOfNodes' properties.
-	 * - onRejected: TO DO!
+	 * @returns {Promise}
+	 * - resolve: { [NBFFjsonModel.CHILDREN], numOfNodes }
+	 * - reject: TO DO!
 	 */
-	async netscapeToJSON(htmlString, midFunction) {
-		return await NBFFToJSON(htmlString, midFunction, this.#NBFFjsonModel)
+	async netscapeToJSON(nbffString, midFunction) {
+		if (typeof nbffString !== 'string')
+			throw new TypeError('(nbffString) argument must be of type String')
+
+		return await NBFFToJSON(nbffString, midFunction, this.#NBFFjsonModel)
 	}
 }
 
