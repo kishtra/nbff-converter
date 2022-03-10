@@ -1,5 +1,4 @@
 let NBFFjsonModel
-
 let numOfNodes = 0
 let level = -1
 let result = []
@@ -14,7 +13,7 @@ const TAGS = {
 	DT: '<DT>',
 	DLOpen: '<DL>',
 	DLClose: '</DL>',
-	targetsOpeningTagLength: 2,
+	targetOpeningTagLength: 2,
 	folderOpen: '<H',
 	linkOpen: '<A',
 	folderClose: '</H3>',
@@ -36,23 +35,24 @@ const TAGS = {
  * - resolve: { [NBFFjsonModel.CHILDREN], numOfNodes }
  * - reject: TO DO!
  */
-function NBFFToJSON(nbffString, midFunction = createParseTree, attrProp) {
+async function NBFFToJSON(nbffString, midFunction = createParseTree, attrProp) {
 	NBFFjsonModel = attrProp
+	numOfNodes = 0
+	level = -1
+	result = []
 
 	POSITIONS.lvlUp = nbffString.indexOf(TAGS.DLOpen)
 	POSITIONS.lvlDown = nbffString.indexOf(TAGS.DLClose)
 
-	return new Promise(async (resolve, reject) => {
-		let tag = null
-		let node = null
+	let tag = null
+	let node = null
 
-		while ((tag = getNextValidTag(nbffString)) !== null) {
-			node = returnAsObject(tag)
-			await midFunction(node)
-		}
+	while ((tag = getNextValidTag(nbffString)) !== null) {
+		node = returnAsObject(tag)
+		await midFunction(node)
+	}
 
-		resolve({ [NBFFjsonModel.CHILDREN]: result, numOfNodes: numOfNodes })
-	})
+	return { [NBFFjsonModel.CHILDREN]: result, numOfNodes: numOfNodes }
 }
 
 function getNextValidTag(nbffString) {
@@ -73,7 +73,7 @@ function getNextValidTag(nbffString) {
 	if (POSITIONS.targetStart !== -1) {
 		const tagType = nbffString.substr(
 			POSITIONS.targetStart + TAGS.DT.length,
-			TAGS.targetsOpeningTagLength
+			TAGS.targetOpeningTagLength
 		)
 
 		if (tagType === TAGS.linkOpen) {

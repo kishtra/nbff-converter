@@ -38,13 +38,16 @@ class NBFFConverter {
 	 * - PERSONAL_TOOLBAR_FOLDER: 'personalToolbarFolder'
 	 */
 	constructor(NBFFjsonModel = {}) {
-		if (typeof NBFFjsonModel !== 'object')
-			throw new TypeError('Invalid constructor argument type.')
+		if (!(NBFFjsonModel instanceof Object))
+			throw new TypeError('Invalid constructor argument type. Expecting type Object.')
 
-		for (const usrKey in NBFFjsonModel) {
-			for (const privKey in this.#NBFFjsonModel) {
-				if (usrKey === privKey) this.#NBFFjsonModel[privKey] = NBFFjsonModel[usrKey]
-			}
+		for (const usrModelKey in NBFFjsonModel) {
+			if (this.#NBFFjsonModel[usrModelKey] === undefined)
+				throw new ReferenceError(
+					`Invalid constructor property key: { ${usrModelKey} }`
+				)
+
+			this.#NBFFjsonModel[usrModelKey] = NBFFjsonModel[usrModelKey]
 		}
 	}
 
@@ -61,16 +64,29 @@ class NBFFConverter {
 	 * - reject: TO DO!
 	 */
 	async JSONToNetscape(json, header = true, tabSpaces = 4) {
-		if (typeof json !== 'object')
-			throw new TypeError('(json) argument must be of type Object')
-		else if (!json[this.#NBFFjsonModel.CHILDREN]) {
-			throw new ReferenceError('(json) argument must have "children" property')
-		}
+		return new Promise((resolve, reject) => {
+			if (!(json instanceof Object))
+				reject(new TypeError('(json) argument must be of type Object'))
+			else if (json[this.#NBFFjsonModel.CHILDREN] === undefined)
+				reject(new ReferenceError('(json) argument must have "children" property'))
+			else if (!(json[this.#NBFFjsonModel.CHILDREN] instanceof Array))
+				reject(
+					new TypeError(
+						'(json) argument "children" property must be an instance of Array'
+					)
+				)
+			else if (typeof header !== 'boolean')
+				reject(new TypeError('(header) argument must be of type Boolean'))
+			else if (typeof tabSpaces !== 'number')
+				reject(new TypeError('(tabSpaces) argument must be of type Number'))
+			else if (tabSpaces < 0)
+				reject(new RangeError('(tabSpaces) argument must be greater than zero'))
 
-		let NBFFHeader = ''
-		if (header) NBFFHeader = this.#NBFFHeader
+			let NBFFHeader = ''
+			if (header) NBFFHeader = this.#NBFFHeader
 
-		return await JSONToNBFF(json, NBFFHeader, tabSpaces, this.#NBFFjsonModel)
+			resolve(JSONToNBFF(json, NBFFHeader, tabSpaces, this.#NBFFjsonModel))
+		})
 	}
 
 	/**
@@ -88,11 +104,15 @@ class NBFFConverter {
 	 * - resolve: { [NBFFjsonModel.CHILDREN], numOfNodes }
 	 * - reject: TO DO!
 	 */
-	async netscapeToJSON(nbffString, midFunction) {
-		if (typeof nbffString !== 'string')
-			throw new TypeError('(nbffString) argument must be of type String')
+	netscapeToJSON(nbffString, midFunction) {
+		return new Promise((resolve, reject) => {
+			if (typeof nbffString !== 'string')
+				reject(new TypeError('(nbffString) argument must be of type String'))
+			else if (midFunction !== undefined && typeof midFunction !== 'function')
+				reject(new TypeError('(midFunction) argument must be of type Function'))
 
-		return await NBFFToJSON(nbffString, midFunction, this.#NBFFjsonModel)
+			resolve(NBFFToJSON(nbffString, midFunction, this.#NBFFjsonModel))
+		})
 	}
 }
 
