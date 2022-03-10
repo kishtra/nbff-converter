@@ -1,6 +1,7 @@
 let NBFFjsonModel
 let numOfNodes = 0
 let level = -1
+let id = 0
 let result = []
 
 const POSITIONS = {
@@ -39,6 +40,7 @@ async function NBFFToJSON(nbffString, midFunction = createParseTree, attrProp) {
 	NBFFjsonModel = attrProp
 	numOfNodes = 0
 	level = -1
+	id = 0
 	result = []
 
 	POSITIONS.lvlUp = nbffString.indexOf(TAGS.DLOpen)
@@ -46,10 +48,13 @@ async function NBFFToJSON(nbffString, midFunction = createParseTree, attrProp) {
 
 	let tag = null
 	let node = null
+	let tmp = null
 
 	while ((tag = getNextValidTag(nbffString)) !== null) {
 		node = returnAsObject(tag)
-		await midFunction(node)
+		if ((tmp = await midFunction(node)) !== undefined) {
+			result.push(tmp)
+		}
 	}
 
 	return { [NBFFjsonModel.CHILDREN]: result, numOfNodes: numOfNodes }
@@ -103,7 +108,7 @@ function getNextValidTag(nbffString) {
 }
 
 function returnAsObject(bookmarkTagStr) {
-	let bookmarkObj = { level: level }
+	let bookmarkObj = { level: level, id: id++ }
 
 	let attrStart = -1
 	let attrValStart = -1
