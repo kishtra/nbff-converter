@@ -9,7 +9,7 @@ let NBFFjsonModel
  * @param {Number} tabSpaces - Spaces per tab. Defaults to 4.
  *
  * @returns {Promise}
- * - resolve: { NBFFString, numOfNodes }
+ * - resolve: { NBFFStr, numOfNodes }
  * - reject: TO DO!
  */
 function JSONToNBFF(json, NBFFHeader, tabSpaces = 4, attrProp) {
@@ -21,7 +21,7 @@ function JSONToNBFF(json, NBFFHeader, tabSpaces = 4, attrProp) {
 	let childrenArr = null
 	let tabNum = parentsArr.length
 	let numOfNodes = 0
-	let NBFFString = NBFFHeader + '<DL><p>'
+	let NBFFStr = NBFFHeader + '<DL><p>'
 
 	while (tabNum) {
 		if (!childIndex && !childrenArr) {
@@ -33,7 +33,7 @@ function JSONToNBFF(json, NBFFHeader, tabSpaces = 4, attrProp) {
 
 		if ((child = childrenArr[childIndex])) {
 			numOfNodes++
-			NBFFString += returnAsElementString(child, tabNum, tabSpaces)
+			NBFFStr += returnAsElementString(child, tabNum, tabSpaces)
 
 			if (child[NBFFjsonModel.CHILDREN]) {
 				parentsArr.push(child)
@@ -46,11 +46,11 @@ function JSONToNBFF(json, NBFFHeader, tabSpaces = 4, attrProp) {
 			childIndex = null
 			childrenArr = null
 			tabNum = parentsArr.length
-			NBFFString += '\n' + ' '.repeat(tabNum * tabSpaces) + '</DL><p>'
+			NBFFStr += '\n' + ' '.repeat(tabNum * tabSpaces) + '</DL><p>'
 		}
 	}
 
-	return { NBFFString: NBFFString, numOfNodes: numOfNodes }
+	return { NBFFStr: NBFFStr, numOfNodes: numOfNodes }
 }
 
 function returnAsElementString(jsonNode, tabNum, tabSpaces) {
