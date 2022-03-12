@@ -57,11 +57,12 @@ function returnAsElementString(jsonNode, tabNum, tabSpaces) {
 	const newlineIndent = '\n' + ' '.repeat(tabNum * tabSpaces)
 
 	var attributes = ''
-	for (const prop in jsonNode) {
-		for (const key in NBFFjsonModel) {
-			if (key === 'INNER_TEXT' || key === 'CHILDREN') continue
-			attributes += prop === NBFFjsonModel[key] ? ` ${key}="${jsonNode[prop]}"` : ''
-		}
+	for (const key in NBFFjsonModel) {
+		if (key !== 'INNER_TEXT' && key !== 'CHILDREN')
+			for (const prop in jsonNode) {
+				attributes +=
+					prop === NBFFjsonModel[key] ? ` ${key}="${jsonNode[prop]}"` : ''
+			}
 	}
 
 	if (jsonNode[NBFFjsonModel.CHILDREN]) {

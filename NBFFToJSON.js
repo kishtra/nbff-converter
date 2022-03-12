@@ -1,7 +1,7 @@
 let NBFFjsonModel
+let type = null
 let numOfNodes = 0
-let level = -1
-let id = 0
+let level = 0
 let result = []
 
 const POSITIONS = {
@@ -30,7 +30,7 @@ const TAGS = {
  * @param {Function} midFunction Optional user defined function. Takes one object
  * 								 argument for every valid bookmark tag.
  * 								 If not provided, the default function will create
- * 								 and return a parse tree.
+ * 								 a parse tree.
  *
  * @returns {Promise}
  * - resolve: { [NBFFjsonModel.CHILDREN], numOfNodes }
@@ -38,9 +38,9 @@ const TAGS = {
  */
 async function NBFFToJSON(nbffString, midFunction = createParseTree, attrProp) {
 	NBFFjsonModel = attrProp
+	type = null
 	numOfNodes = 0
-	level = -1
-	id = 0
+	level = 0
 	result = []
 
 	POSITIONS.lvlUp = nbffString.indexOf(TAGS.DLOpen)
@@ -57,7 +57,7 @@ async function NBFFToJSON(nbffString, midFunction = createParseTree, attrProp) {
 		}
 	}
 
-	return { [NBFFjsonModel.CHILDREN]: result, numOfNodes: numOfNodes }
+	return { level: 0, id: 0, numOfNodes: numOfNodes, [NBFFjsonModel.CHILDREN]: result }
 }
 
 function getNextValidTag(nbffString) {
@@ -82,14 +82,17 @@ function getNextValidTag(nbffString) {
 		)
 
 		if (tagType === TAGS.linkOpen) {
+			type = 'url'
 			POSITIONS.targetEnd =
 				nbffString.indexOf(TAGS.linkClose, POSITIONS.targetStart) +
 				TAGS.linkClose.length
 		} else if (tagType === TAGS.folderOpen) {
+			type = 'folder'
 			POSITIONS.targetEnd =
 				nbffString.indexOf(TAGS.folderClose, POSITIONS.targetStart) +
 				TAGS.folderClose.length
 		} else {
+			type = null
 			console.error(
 				`Invalid tag type at index [${POSITIONS.targetStart + TAGS.DT.length}]!`
 			)
@@ -108,7 +111,7 @@ function getNextValidTag(nbffString) {
 }
 
 function returnAsObject(bookmarkTagStr) {
-	let bookmarkObj = { level: level, id: id++ }
+	let node = { level: level, id: numOfNodes, type: type }
 
 	let attrStart = -1
 	let attrValStart = -1
@@ -120,20 +123,15 @@ function returnAsObject(bookmarkTagStr) {
 		if ((attrStart = bookmarkTagStr.indexOf(key)) !== -1) {
 			attrValStart = attrStart + key.length + '="'.length
 			attrValEnd = bookmarkTagStr.indexOf('"', attrValStart)
-			bookmarkObj[NBFFjsonModel[key]] = bookmarkTagStr.substring(
-				attrValStart,
-				attrValEnd
-			)
+			node[NBFFjsonModel[key]] = bookmarkTagStr.substring(attrValStart, attrValEnd)
 		}
 	}
 
-	bookmarkObj.type = bookmarkObj.url ? 'url' : 'folder'
-
 	titleStart = bookmarkTagStr.indexOf('>') + 1
 	titleEnd = bookmarkTagStr.indexOf('<', titleStart)
-	bookmarkObj[NBFFjsonModel.INNER_TEXT] = bookmarkTagStr.substring(titleStart, titleEnd)
+	node[NBFFjsonModel.INNER_TEXT] = bookmarkTagStr.substring(titleStart, titleEnd)
 
-	return bookmarkObj
+	return node
 }
 
 function createParseTree(node) {
@@ -142,16 +140,16 @@ function createParseTree(node) {
 	while (
 		(lastParent = result.length ? result[result.length - 1] : { level: -1 }).level >=
 			node.level &&
-		lastParent.level !== 0
+		lastParent.level !== 1
 	)
 		result.pop()
 
-	if (node.level > 0) lastParent[NBFFjsonModel.CHILDREN].push(node)
+	if (node.level > 1) lastParent[NBFFjsonModel.CHILDREN].push(node)
 
 	if (node.type === 'folder') {
 		node[NBFFjsonModel.CHILDREN] = []
 		result.push(node)
-	} else if (node.type === 'url' && node.level === 0) result.push(node)
+	} else if (node.type === 'url' && node.level === 1) result.push(node)
 }
 
 export default NBFFToJSON

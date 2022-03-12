@@ -66,19 +66,15 @@ class NBFFConverter {
 	async JSONToNetscape(json, header = true, tabSpaces = 4) {
 		return new Promise((resolve, reject) => {
 			if (!(json instanceof Object))
-				reject(new TypeError('(json) argument must be of type Object'))
+				reject(new TypeError('(json) argument must be an Object'))
 			else if (json[this.#NBFFjsonModel.CHILDREN] === undefined)
 				reject(new ReferenceError('(json) argument must have "children" property'))
-			else if (!(json[this.#NBFFjsonModel.CHILDREN] instanceof Array))
-				reject(
-					new TypeError(
-						'(json) argument "children" property must be an instance of Array'
-					)
-				)
+			else if (!Array.isArray(json[this.#NBFFjsonModel.CHILDREN]))
+				reject(new TypeError('(json) argument "children" property must be an Array'))
 			else if (typeof header !== 'boolean')
-				reject(new TypeError('(header) argument must be of type Boolean'))
+				reject(new TypeError('(header) argument must be a Boolean'))
 			else if (typeof tabSpaces !== 'number')
-				reject(new TypeError('(tabSpaces) argument must be of type Number'))
+				reject(new TypeError('(tabSpaces) argument must be a Number'))
 			else if (tabSpaces < 0)
 				reject(new RangeError('(tabSpaces) argument must be greater than zero'))
 
@@ -107,9 +103,9 @@ class NBFFConverter {
 	netscapeToJSON(nbffString, midFunction) {
 		return new Promise((resolve, reject) => {
 			if (typeof nbffString !== 'string')
-				reject(new TypeError('(nbffString) argument must be of type String'))
+				reject(new TypeError('(nbffString) argument must be a String'))
 			else if (midFunction !== undefined && typeof midFunction !== 'function')
-				reject(new TypeError('(midFunction) argument must be of type Function'))
+				reject(new TypeError('(midFunction) argument must be a Function'))
 
 			resolve(NBFFToJSON(nbffString, midFunction, this.#NBFFjsonModel))
 		})
