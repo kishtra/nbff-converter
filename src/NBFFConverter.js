@@ -60,7 +60,7 @@ class NBFFConverter {
 	 * @param {Number} tabSpaces - Spaces per tab. Defaults to 4.
 	 *
 	 * @returns {Promise}
-	 * - resolve: { NBFFString, numOfNodes }
+	 * - resolve: { NBFFStr, numOfNodes }
 	 * - reject: TypeError | ReferenceError | RangeError
 	 */
 	async JSONToNetscape(json, header = true, tabSpaces = 4) {
@@ -97,7 +97,7 @@ class NBFFConverter {
 	 * 								 and return a parse tree.
 	 *
 	 * @returns {Promise}
-	 * - resolve: { [NBFFjsonModel.CHILDREN], numOfNodes }
+	 * - resolve: { level, id, numOfNodes, [NBFFjsonModel.CHILDREN] }
 	 * - reject: TypeError
 	 */
 	netscapeToJSON(nbffString, midFunction) {

@@ -7,13 +7,12 @@ let NBFFjsonModel
  * @param {JSON} json - JSON object.
  * @param {Boolean} header - Decide if netscape header is included. Defaults to true.
  * @param {Number} tabSpaces - Spaces per tab. Defaults to 4.
+ * @param {Object} model - Model of JSON object property keys.
  *
- * @returns {Promise}
- * - resolve: { NBFFStr, numOfNodes }
- * - reject: TO DO!
+ * @returns {Object}
  */
-function JSONToNBFF(json, NBFFHeader, tabSpaces = 4, attrProp) {
-	NBFFjsonModel = attrProp
+function JSONToNBFF(json, NBFFHeader, tabSpaces = 4, model) {
+	NBFFjsonModel = model
 
 	let parentsArr = [json]
 	let child = null

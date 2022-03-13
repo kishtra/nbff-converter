@@ -31,13 +31,12 @@ const TAGS = {
  * 								 argument for every valid bookmark tag.
  * 								 If not provided, the default function will create
  * 								 a parse tree.
+ * @param {Object} model - Model of JSON object property keys.
  *
- * @returns {Promise}
- * - resolve: { [NBFFjsonModel.CHILDREN], numOfNodes }
- * - reject: TO DO!
+ * @returns {Object}
  */
-async function NBFFToJSON(nbffString, midFunction = createParseTree, attrProp) {
-	NBFFjsonModel = attrProp
+async function NBFFToJSON(nbffString, midFunction = createParseTree, model) {
+	NBFFjsonModel = model
 	type = null
 	numOfNodes = 0
 	level = 0
