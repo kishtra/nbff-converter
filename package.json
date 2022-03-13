@@ -1,0 +1,31 @@
+{
+	"name": "nbff-converter",
+	"version": "1.0.0",
+	"description": "Netscape Bookmark File Format converter",
+	"main": "src/NBFFConverter.js",
+	"directories": {
+		"test": "test"
+	},
+	"scripts": {
+		"test": "node test/testData.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@github.com/kishtra/nbff-converter.git"
+	},
+	"keywords": [
+		"bookmarks",
+		"bookmark",
+		"netscape",
+		"json",
+		"converter",
+		"parser",
+		"traversal"
+	],
+	"author": "kishtra <kristvul@gmail.com> (https://github.com/kishtra)",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/kishtra/nbff-converter/issues"
+	},
+	"homepage": "https://github.com/kishtra/nbff-converter#readme"
+}

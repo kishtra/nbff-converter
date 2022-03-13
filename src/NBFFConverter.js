@@ -61,7 +61,7 @@ class NBFFConverter {
 	 *
 	 * @returns {Promise}
 	 * - resolve: { NBFFString, numOfNodes }
-	 * - reject: TO DO!
+	 * - reject: TypeError | ReferenceError | RangeError
 	 */
 	async JSONToNetscape(json, header = true, tabSpaces = 4) {
 		return new Promise((resolve, reject) => {
@@ -98,7 +98,7 @@ class NBFFConverter {
 	 *
 	 * @returns {Promise}
 	 * - resolve: { [NBFFjsonModel.CHILDREN], numOfNodes }
-	 * - reject: TO DO!
+	 * - reject: TypeError
 	 */
 	netscapeToJSON(nbffString, midFunction) {
 		return new Promise((resolve, reject) => {
