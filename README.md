@@ -84,7 +84,7 @@ let nbffHeader = nbffConverter.header
 
 ### Exception throwing:
 
--   Checks if valid arguments are passed
+-   Throws an exception if an invalid argument is given
 
 ## Project Status
 
