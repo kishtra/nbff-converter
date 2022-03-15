@@ -1,21 +1,19 @@
-[
-	{
-		"content": [
-			{
-				"name": "dummy folder 1",
-				"content": [
-					{ "url": "http://dummyURL.dne", "name": "dummy URL 1" },
-					{
-						"name": "dummy folder 2",
-						"content": [{ "url": "http://dummyURL.idne" }]
-					}
-				]
-			},
-			{ "url": "http://dummyURL.sdne", "name": "dummy URL 2" },
-			{
-				"name": "dummy folder 3",
-				"content": [{ "url": "http://dummyURL.nidne" }]
-			}
-		]
-	}
-]
+{
+	"content": [
+		{
+			"name": "dummy folder 1",
+			"content": [
+				{ "url": "http://dummyURL.dne", "name": "dummy URL 1" },
+				{
+					"name": "dummy folder 2",
+					"content": [{ "url": "http://dummyURL.idne" }]
+				}
+			]
+		},
+		{ "url": "http://dummyURL.sdne", "name": "dummy URL 2" },
+		{
+			"name": "dummy folder 3",
+			"content": [{ "url": "http://dummyURL.nidne" }]
+		}
+	]
+}
