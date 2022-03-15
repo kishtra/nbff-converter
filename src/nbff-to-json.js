@@ -35,7 +35,7 @@ const TAGS = {
  *
  * @returns {Object}
  */
-async function NBFFToJSON(nbffString, midFunction = createParseTree, model) {
+async function nbffToJSON(nbffString, midFunction = createParseTree, model) {
 	NBFFjsonModel = model
 	type = null
 	numOfNodes = 0
@@ -151,4 +151,4 @@ function createParseTree(node) {
 	} else if (node.type === 'url' && node.level === 1) result.push(node)
 }
 
-export default NBFFToJSON
+export default nbffToJSON

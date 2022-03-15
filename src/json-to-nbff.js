@@ -5,13 +5,13 @@ let NBFFjsonModel
  * returns a Netscape Bookmark File Format string.
  *
  * @param {JSON} jsonTree
- * @param {Boolean} header - Decide if netscape header is included. Defaults to true.
+ * @param {Boolean} header - Decide if NBFF header is included. Defaults to true.
  * @param {Number} tabSpaces - Spaces per tab. Defaults to 4.
  * @param {Object} model - Model of JSON object property keys.
  *
  * @returns {Object}
  */
-function JSONToNBFF(jsonTree, NBFFHeader, tabSpaces = 4, model) {
+function jsonToNBFF(jsonTree, nbffHeader, tabSpaces = 4, model) {
 	NBFFjsonModel = model
 
 	let parentsArr = [jsonTree]
@@ -20,7 +20,7 @@ function JSONToNBFF(jsonTree, NBFFHeader, tabSpaces = 4, model) {
 	let childrenArr = null
 	let tabNum = parentsArr.length
 	let numOfNodes = 0
-	let NBFFStr = NBFFHeader + '<DL><p>'
+	let nbffStr = nbffHeader + '<DL><p>'
 
 	while (tabNum) {
 		if (!childIndex && !childrenArr) {
@@ -32,7 +32,7 @@ function JSONToNBFF(jsonTree, NBFFHeader, tabSpaces = 4, model) {
 
 		if ((child = childrenArr[childIndex])) {
 			numOfNodes++
-			NBFFStr += returnAsElementString(child, tabNum, tabSpaces)
+			nbffStr += returnAsElementString(child, tabNum, tabSpaces)
 
 			if (child[NBFFjsonModel.CHILDREN]) {
 				parentsArr.push(child)
@@ -45,11 +45,11 @@ function JSONToNBFF(jsonTree, NBFFHeader, tabSpaces = 4, model) {
 			childIndex = null
 			childrenArr = null
 			tabNum = parentsArr.length
-			NBFFStr += '\n' + ' '.repeat(tabNum * tabSpaces) + '</DL><p>'
+			nbffStr += '\n' + ' '.repeat(tabNum * tabSpaces) + '</DL><p>'
 		}
 	}
 
-	return { NBFFStr: NBFFStr, numOfNodes: numOfNodes }
+	return { nbffStr: nbffStr, numOfNodes: numOfNodes }
 }
 
 function returnAsElementString(jsonNode, tabNum, tabSpaces) {
@@ -75,4 +75,4 @@ function returnAsElementString(jsonNode, tabNum, tabSpaces) {
 	}
 }
 
-export default JSONToNBFF
+export default jsonToNBFF
