@@ -38,7 +38,8 @@ let nbffConverter = new NBFFConverter(yourNBFFjsonModel?)
 ### Convert
 #### NBFF to JSON
 ```
-nbffConverter.netscapeToJSON(nbffString, midFunction?).then((result) => console.log(result))
+nbffConverter.netscapeToJSON(nbffString, midFunction?)
+	.then((result) => console.log(result))
 ```
 ##### The `midFunction` parameter should look like:
 ```
@@ -46,7 +47,8 @@ nbffConverter.netscapeToJSON(nbffString, midFunction?).then((result) => console.
 ``` 
 #### JSON to NBFF
 ```
-nbffConverter.JSONToNetscape(jsonTree, header?, tabSpaces?).then((result) => console.log(result))
+nbffConverter.JSONToNetscape(jsonTree, header?, tabSpaces?)
+	.then((result) => console.log(result))
 ```
 ## Project Status
 Project is: _in backwards compatible progress_
