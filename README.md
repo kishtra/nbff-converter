@@ -19,7 +19,7 @@
 Proceed to describe how to install / setup one's local environment / get started with the project.
 
 ## Usage
-### Default constructor parameter { KEY: value } reference
+### Reference of default created/expected JSON node `{ KEY: value }` pairs
 ```
 #NBFFjsonModel = {
 	CHILDREN: 'children',
@@ -40,6 +40,10 @@ let nbffConverter = new NBFFConverter(yourNBFFjsonModel?)
 ```
 nbffConverter.netscapeToJSON(nbffString, midFunction?).then((result) => console.log(result))
 ```
+##### The `midFunction` parameter should look like:
+```
+(node: NBFFjsonModelNode) => void/Promise?
+``` 
 #### JSON to NBFF
 ```
 nbffConverter.JSONToNetscape(jsonTree, header?, tabSpaces?).then((result) => console.log(result))
