@@ -1,25 +1,38 @@
 # Netscape Bookmark File Format Converter
 
-> This is an independent, promise-based, Vanilla JS tool used for converting [_Netscape Bookmark File Format_](https://docs.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/aa753582(v=vs.85)).
->
-> Conversion options:
-> - NBFF subfolder and shortcut item --> JSON node (by default sorted into a JSON parse tree)
-> - JSON tree --> NBFF
+This is an *independent, promise-based, Vanilla JS* tool used for converting between [_Netscape Bookmark File Format_](https://docs.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/aa753582(v=vs.85)) and [_JSON_](https://en.wikipedia.org/wiki/JSON).
 
-## General Information
-- Made in a quest for knowledge
-- Intended for my bookmark manager extension (to be finished)
-- Inspired by the idea of wholeness
+## Table of Contents
+* [Features](#features)
+	* [Conversion options](#conversion-options)
+	* [Configurability](#configurability)
+* [Setup](#setup)
+* [Usage](#usage)
+	* [Default created/expected JSON node parameter names](#default-createdexpected-json-node-parameter-names)
+	* [Create a converter](#create-a-converter)
+	* [Convert](#convert)
+	* [Exception throwing](#exception-throwing)
+* [Project Status](#project-status)
+* [Room for Improvement](#room-for-improvement)
+* [Contact](#contact)
+* [License](#license)
 
 ## Features
-- Change created/expected JSON node property names.
+### Conversion options:
+- NBFF (subfolder and shortcut item) --> JSON node (by default sorted into a JSON tree)
+- JSON tree --> NBFF (subfolder and shortcut item)
+
+### Configurability:
+- Change created/expected JSON node property names
 - Pass a custom JSON node processing midFunction
 
 ## Setup
-Proceed to describe how to install / setup one's local environment / get started with the project.
+```
+let NBFFConverter = require('NBFFConverter')
+```
 
 ## Usage
-### Reference of default created/expected JSON node `{ KEY: value }` pairs
+### Default created/expected JSON node parameter names:
 ```
 #NBFFjsonModel = {
 	CHILDREN: 'children',
@@ -31,28 +44,27 @@ Proceed to describe how to install / setup one's local environment / get started
 	PERSONAL_TOOLBAR_FOLDER: 'personalToolbarFolder',
 }
 ```
-### Create a converter
+### Create a converter:
 ```
 let nbffConverter = new NBFFConverter(yourNBFFjsonModel?)
 ```
-### Convert
-#### NBFF to JSON
+### Convert:
+#### - NBFF to JSON
 ```
 nbffConverter.netscapeToJSON(nbffString, midFunction?)
 	.then((result) => console.log(result))
 ```
-##### The `midFunction` parameter should look like:
-```
-(node: NBFFjsonModelNode) => void/Promise?
-``` 
-#### JSON to NBFF
+##### The `midFunction` parameter looks like:
+`(node: NBFFjsonModelNode) => void | any | Promise` 
+#### - JSON to NBFF
 ```
 nbffConverter.JSONToNetscape(jsonTree, header?, tabSpaces?)
 	.then((result) => console.log(result))
 ```
+### Exception throwing:
+- Checks if valid arguments are passed
 ## Project Status
 Project is: _in backwards compatible progress_
-
 
 ## Room for Improvement
 - Support for other NBFF items?
@@ -65,8 +77,5 @@ To do:
 Created by [@kishtra](https://github.com/kishtra) - feel free to contact me!
 
 
-<!-- Optional -->
-<!-- ## License -->
-<!-- This project is open source and available under the [... License](). -->
-
-<!-- You don't have to include all sections - just the one's relevant to your project -->
+## License
+This project is open source and available under the [MIT License](https://choosealicense.com/licenses/mit/).
