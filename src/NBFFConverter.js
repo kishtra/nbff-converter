@@ -1,7 +1,7 @@
 import JSONToNBFF from './JSONToNBFF.js'
 import NBFFToJSON from './NBFFToJSON.js'
 
-/** Netscape Bookmarks File Format converter. */
+/** Netscape Bookmark File Format converter. */
 class NBFFConverter {
 	#NBFFHeader = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
 <!--This is an automatically generated file.
@@ -26,7 +26,7 @@ class NBFFConverter {
 	}
 
 	/**
-	 * Create a Netscape Bookmarks File Format converter.
+	 * Create a Netscape Bookmark File Format converter.
 	 * @param {Object} NBFFjsonModel Defines created/expected JSON object key names.
 	 * Default { KEY: value } pairs are:
 	 * - CHILDREN: 'children'
@@ -53,9 +53,9 @@ class NBFFConverter {
 
 	/**
 	 * Traverses JSON tree, converts every valid node to an element string and
-	 * returns a Netscape Bookmarks File Format string.
+	 * returns a Netscape Bookmark File Format string.
 	 *
-	 * @param {JSON} json - JSON object.
+	 * @param {JSON} jsonTree
 	 * @param {Boolean} header - Decide if netscape header is included. Defaults to true.
 	 * @param {Number} tabSpaces - Spaces per tab. Defaults to 4.
 	 *
@@ -63,14 +63,18 @@ class NBFFConverter {
 	 * - resolve: { NBFFStr, numOfNodes }
 	 * - reject: TypeError | ReferenceError | RangeError
 	 */
-	async JSONToNetscape(json, header = true, tabSpaces = 4) {
+	async JSONToNetscape(jsonTree, header = true, tabSpaces = 4) {
 		return new Promise((resolve, reject) => {
-			if (!(json instanceof Object))
-				reject(new TypeError('(json) argument must be an Object'))
-			else if (json[this.#NBFFjsonModel.CHILDREN] === undefined)
-				reject(new ReferenceError('(json) argument must have "children" property'))
-			else if (!Array.isArray(json[this.#NBFFjsonModel.CHILDREN]))
-				reject(new TypeError('(json) argument "children" property must be an Array'))
+			if (!(jsonTree instanceof Object))
+				reject(new TypeError('(jsonTree) argument must be an Object'))
+			else if (jsonTree[this.#NBFFjsonModel.CHILDREN] === undefined)
+				reject(
+					new ReferenceError('(jsonTree) argument must have "children" property')
+				)
+			else if (!Array.isArray(jsonTree[this.#NBFFjsonModel.CHILDREN]))
+				reject(
+					new TypeError('(jsonTree) argument "children" property must be an Array')
+				)
 			else if (typeof header !== 'boolean')
 				reject(new TypeError('(header) argument must be a Boolean'))
 			else if (typeof tabSpaces !== 'number')
@@ -81,16 +85,16 @@ class NBFFConverter {
 			let NBFFHeader = ''
 			if (header) NBFFHeader = this.#NBFFHeader
 
-			resolve(JSONToNBFF(json, NBFFHeader, tabSpaces, this.#NBFFjsonModel))
+			resolve(JSONToNBFF(jsonTree, NBFFHeader, tabSpaces, this.#NBFFjsonModel))
 		})
 	}
 
 	/**
-	 * Parses Netscape Bookmarks File Format string and returns a JSON parse tree.
+	 * Parses Netscape Bookmark File Format string and returns a JSON parse tree.
 	 * Optionaly pass a midFunction which will be invoked for every valid
 	 * bookmark/folder tag with corresponding bookmark/folder object node as an argument.
 	 *
-	 * @param {String} nbffString Netscape Bookmarks File Format string to convert.
+	 * @param {String} nbffString Netscape Bookmark File Format string to convert.
 	 * @param {Function} midFunction Optional user defined function. Takes one object
 	 * 								 argument for every valid bookmark tag.
 	 * 								 If not provided, the default function will create

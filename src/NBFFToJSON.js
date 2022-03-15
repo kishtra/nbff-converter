@@ -22,11 +22,11 @@ const TAGS = {
 }
 
 /**
- * Parses Netscape Bookmarks File Format string and returns a JSON parse tree.
+ * Parses Netscape Bookmark File Format string and returns a JSON parse tree.
  * Optionaly pass a midFunction which will be invoked for every valid
  * bookmark/folder tag with corresponding bookmark/folder object node as an argument.
  *
- * @param {String} nbffString Netscape Bookmarks File Format string to convert.
+ * @param {String} nbffString Netscape Bookmark File Format string to convert.
  * @param {Function} midFunction Optional user defined function. Takes one object
  * 								 argument for every valid bookmark tag.
  * 								 If not provided, the default function will create

@@ -2,19 +2,19 @@ let NBFFjsonModel
 
 /**
  * Traverses JSON tree, converts every valid node to an element string and
- * returns a Netscape Bookmarks File Format string.
+ * returns a Netscape Bookmark File Format string.
  *
- * @param {JSON} json - JSON object.
+ * @param {JSON} jsonTree
  * @param {Boolean} header - Decide if netscape header is included. Defaults to true.
  * @param {Number} tabSpaces - Spaces per tab. Defaults to 4.
  * @param {Object} model - Model of JSON object property keys.
  *
  * @returns {Object}
  */
-function JSONToNBFF(json, NBFFHeader, tabSpaces = 4, model) {
+function JSONToNBFF(jsonTree, NBFFHeader, tabSpaces = 4, model) {
 	NBFFjsonModel = model
 
-	let parentsArr = [json]
+	let parentsArr = [jsonTree]
 	let child = null
 	let childIndex = null
 	let childrenArr = null
