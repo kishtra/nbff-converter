@@ -32,13 +32,11 @@ This is an _independent, promise-based, Vanilla JS_ tool used for converting bet
 
 ## Setup
 
-```
-let NBFFConverter = require('NBFFConverter')
-```
+`npm install nbff-converter`
 
 ## Usage
 
-### Default created/expected JSON node parameter names:
+### Default created/expected JSON node property names:
 
 ```
 #NBFFjsonModel = {
@@ -76,6 +74,12 @@ nbffConverter.netscapeToJSON(nbffString, midFunction?)
 ```
 nbffConverter.JSONToNetscape(jsonTree, header?, tabSpaces?)
 	.then((result) => console.log(result))
+```
+
+### Get NBFF header:
+
+```
+let nbffHeader = nbffConverter.header
 ```
 
 ### Exception throwing:
