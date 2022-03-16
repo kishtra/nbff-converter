@@ -1,18 +1,31 @@
 import fs from 'fs'
 import NBFFConverter from '../src/nbff-converter.js'
 
-let nbffConverter = new NBFFConverter()
-console.log(nbffConverter.header)
+// Default example
 
-fs.readFile('./dummy.html', 'utf8', async (err, data) => {
-	let nbffConverterDefault = new NBFFConverter()
+const nbffString = fs.readFileSync('./dummy.html', 'utf8')
+const nbffConverterDefault = new NBFFConverter()
 
-	console.log(await nbffConverterDefault.netscapeToJSON(data))
+nbffConverterDefault.netscapeToJSON(nbffString).then((result) => {
+	fs.writeFileSync('result1.json', JSON.stringify(result, null, 4))
 })
 
-fs.readFile('./dummy.json', 'utf8', async (err, data) => {
-	let dummyJSON = JSON.parse(data)
-	let nbffConverterCustom = new NBFFConverter({ CHILDREN: 'content', INNER_TEXT: 'name' })
+// Simple midFunction example:
+const myMidFunction = (node) => node.title
 
-	console.log(await nbffConverterCustom.jsonToNetscape(dummyJSON, true, 4))
+nbffConverterDefault.netscapeToJSON(nbffString, myMidFunction).then((result) => {
+	const jsonString2 = JSON.stringify(result, null, 4)
+	fs.writeFileSync('result2.json', jsonString2)
+})
+
+// Custom example
+
+const jsonString = fs.readFileSync('./dummy.json', 'utf8')
+const jsonData = JSON.parse(jsonString)
+
+const myCustomModel = { CHILDREN: 'content', INNER_TEXT: 'name', HREF: 'shortcut' }
+const nbffConverterCustom = new NBFFConverter(myCustomModel)
+
+nbffConverterCustom.jsonToNetscape(jsonData, true, 4).then((result) => {
+	fs.writeFileSync('result.html', result.nbffStr)
 })

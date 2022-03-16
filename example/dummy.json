@@ -3,17 +3,21 @@
 		{
 			"name": "dummy folder 1",
 			"content": [
-				{ "url": "http://dummyURL.dne", "name": "dummy URL 1" },
+				{ "shortcut": "http://dummyURL.dne", "name": "Does not exist" },
 				{
 					"name": "dummy folder 2",
-					"content": [{ "url": "http://dummyURL.idne" }]
+					"content": [
+						{ "shortcut": "http://dummyURL.idne", "name": "It does not exist" }
+					]
 				}
 			]
 		},
-		{ "url": "http://dummyURL.sdne", "name": "dummy URL 2" },
+		{ "shortcut": "http://dummyURL.sdne", "name": "Still does not exist" },
 		{
 			"name": "dummy folder 3",
-			"content": [{ "url": "http://dummyURL.nidne" }]
+			"content": [
+				{ "shortcut": "http://dummyURL.nidne", "name": "No, it does not exist" }
+			]
 		}
 	]
 }

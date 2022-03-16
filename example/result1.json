@@ -1,0 +1,59 @@
+{
+    "level": 0,
+    "id": 0,
+    "numOfNodes": 7,
+    "children": [
+        {
+            "level": 1,
+            "id": 1,
+            "type": "folder",
+            "title": "dummy folder 1",
+            "children": [
+                {
+                    "level": 2,
+                    "id": 2,
+                    "type": "url",
+                    "url": "http://dummyURL.dne",
+                    "title": "Does not exist"
+                },
+                {
+                    "level": 2,
+                    "id": 3,
+                    "type": "folder",
+                    "title": "dummy folder 2",
+                    "children": [
+                        {
+                            "level": 3,
+                            "id": 4,
+                            "type": "url",
+                            "url": "http://dummyURL.idne",
+                            "title": "It does not exist"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "level": 1,
+            "id": 5,
+            "type": "url",
+            "url": "http://dummyURL.sdne",
+            "title": "Still does not exist"
+        },
+        {
+            "level": 1,
+            "id": 6,
+            "type": "folder",
+            "title": "dummy folder 3",
+            "children": [
+                {
+                    "level": 2,
+                    "id": 7,
+                    "type": "url",
+                    "url": "http://dummyURL.nidne",
+                    "title": "No, it does not exist"
+                }
+            ]
+        }
+    ]
+}

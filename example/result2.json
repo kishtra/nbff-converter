@@ -1,0 +1,14 @@
+{
+    "level": 0,
+    "id": 0,
+    "numOfNodes": 7,
+    "children": [
+        "dummy folder 1",
+        "Does not exist",
+        "dummy folder 2",
+        "It does not exist",
+        "Still does not exist",
+        "dummy folder 3",
+        "No, it does not exist"
+    ]
+}
