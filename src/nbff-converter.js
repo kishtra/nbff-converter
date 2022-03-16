@@ -1,3 +1,5 @@
+// TO DO: fix exception throwing hell
+
 import jsonToNBFF from './json-to-nbff.js'
 import nbffToJSON from './nbff-to-json.js'
 
@@ -61,49 +63,6 @@ class NBFFConverter {
 	}
 
 	/**
-	 * Traverses a JSON tree, converts individual nodes to an element string and
-	 * returns an object containing a Netscape Bookmark File Format string
-	 * and the number of nodes converted.
-	 *
-	 * @param {JSON} jsonTree
-	 * @param {Boolean} addHeader - Decide if NBFF header is included. Defaults to true.
-	 * @param {Number} tabSpaces - Spaces per tab. Defaults to 4.
-	 *
-	 * @returns {Promise}
-	 * - resolve: { nbffStr, numOfNodes }
-	 * - reject: TypeError | ReferenceError | RangeError
-	 */
-	async jsonToNetscape(jsonTree, addHeader = true, tabSpaces = 4) {
-		return new Promise((resolve, reject) => {
-			if (typeof jsonTree !== 'object')
-				reject(new TypeError('(jsonTree) argument must be an Object'))
-			else if (Array.isArray(jsonTree))
-				reject(
-					new TypeError('(jsonTree) argument is an Array but expecting an Object')
-				)
-			else if (jsonTree[this.#NBFFjsonModel.CHILDREN] === undefined)
-				reject(
-					new ReferenceError('(jsonTree) argument must have "CHILDREN" property')
-				)
-			else if (!Array.isArray(jsonTree[this.#NBFFjsonModel.CHILDREN]))
-				reject(
-					new TypeError('(jsonTree) argument "CHILDREN" property must be an Array')
-				)
-			else if (typeof addHeader !== 'boolean')
-				reject(new TypeError('(addHeader) argument must be a Boolean'))
-			else if (typeof tabSpaces !== 'number')
-				reject(new TypeError('(tabSpaces) argument must be a Number'))
-			else if (tabSpaces < 0)
-				reject(new RangeError('(tabSpaces) argument must be greater than zero'))
-
-			let nbffHeader = ''
-			if (addHeader) nbffHeader = this.#NBFF_HEADER
-
-			resolve(jsonToNBFF(jsonTree, nbffHeader, tabSpaces, this.#NBFFjsonModel))
-		})
-	}
-
-	/**
 	 * Parses Netscape Bookmark File Format string and returns a JSON tree.
 	 * Optionaly pass a midFunction which will be invoked for every valid
 	 * subfolder/shortcut item with corresponding subfolder/shortcut object
@@ -127,6 +86,53 @@ class NBFFConverter {
 				reject(new TypeError('(midFunction) argument must be a Function'))
 
 			resolve(nbffToJSON(nbffString, midFunction, this.#NBFFjsonModel))
+		})
+	}
+
+	/**
+	 * Traverses a JSON tree, converts individual nodes to an element string and
+	 * returns an object containing a Netscape Bookmark File Format string
+	 * and the number of nodes converted.
+	 *
+	 * @param {JSON} jsonTree
+	 * @param {Boolean} addHeader - Decide if NBFF header is included. Defaults to true.
+	 * @param {Number} tabSpaces - Spaces per tab. Defaults to 4.
+	 *
+	 * @returns {Promise}
+	 * - resolve: { nbffStr, numOfNodes }
+	 * - reject: TypeError | ReferenceError | RangeError
+	 */
+	async jsonToNetscape(jsonTree, addHeader = true, tabSpaces = 4) {
+		return new Promise((resolve, reject) => {
+			if (typeof jsonTree !== 'object')
+				reject(new TypeError('(jsonTree) argument must be an Object'))
+			else if (Array.isArray(jsonTree))
+				reject(
+					new TypeError('(jsonTree) argument is an Array but expecting an Object')
+				)
+			else if (jsonTree[this.#NBFFjsonModel.CHILDREN] === undefined)
+				reject(
+					new ReferenceError(
+						`(jsonTree) argument must have "${
+							this.#NBFFjsonModel.CHILDREN
+						}" property`
+					)
+				)
+			else if (!Array.isArray(jsonTree[this.#NBFFjsonModel.CHILDREN]))
+				reject(
+					new TypeError('(jsonTree) argument "CHILDREN" property must be an Array')
+				)
+			else if (typeof addHeader !== 'boolean')
+				reject(new TypeError('(addHeader) argument must be a Boolean'))
+			else if (typeof tabSpaces !== 'number')
+				reject(new TypeError('(tabSpaces) argument must be a Number'))
+			else if (tabSpaces < 0)
+				reject(new RangeError('(tabSpaces) argument must be greater than zero'))
+
+			let nbffHeader = ''
+			if (addHeader) nbffHeader = this.#NBFF_HEADER
+
+			resolve(jsonToNBFF(jsonTree, nbffHeader, tabSpaces, this.#NBFFjsonModel))
 		})
 	}
 }
