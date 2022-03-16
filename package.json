@@ -12,13 +12,20 @@
 		"url": "git+ssh://git@github.com/kishtra/nbff-converter.git"
 	},
 	"keywords": [
-		"bookmarks",
 		"bookmark",
+		"bookmarks",
+		"export",
+		"exported",
+		"import",
+		"imported",
 		"netscape",
+		"html",
 		"json",
+		"object",
+		"convert",
 		"converter",
-		"parser",
-		"traversal"
+		"parse",
+		"parser"
 	],
 	"author": "kishtra <kristvul@gmail.com> (https://github.com/kishtra)",
 	"license": "MIT",
