@@ -112,14 +112,14 @@ let nbffHeader = nbffConverter.header
 
 _Result_:
 
-```html
+```HTML
 <!DOCTYPE NETSCAPE-Bookmark-file-1>
 <!--This is an automatically generated file.
-    It will be read and overwritten.
-    Do Not Edit! -->
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Bookmarks</title>
-<h1>Bookmarks</h1>
+	It will be read and overwritten.
+	Do Not Edit! -->
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<Title>Bookmarks</Title>
+<H1>Bookmarks</H1>
 ```
 
 ### Exception throwing
