@@ -3,9 +3,9 @@
 	"version": "1.0.0",
 	"type": "module",
 	"description": "Netscape Bookmark File Format Converter",
-	"main": "src/NBFFConverter.js",
+	"main": "src/nbff-converter.js",
 	"scripts": {
-		"test": "node test/testData.js"
+		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"repository": {
 		"type": "git",
