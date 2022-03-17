@@ -1,10 +1,14 @@
 // TO DO: fix exception throwing hell
 
-import jsonToNBFF from './json-to-nbff.js'
-import nbffToJSON from './nbff-to-json.js'
+/**
+ * @module Netscape Bookmark File Format converter.
+ */
+
+const { jsonToNBFF } = require('./json-to-nbff.js')
+const { nbffToJSON } = require('./nbff-to-json.js')
 
 /** Netscape Bookmark File Format converter. */
-class NBFFConverter {
+module.exports = class NBFFConverter {
 	#NBFF_HEADER = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
 <!--This is an automatically generated file.
 	It will be read and overwritten.
@@ -136,5 +140,3 @@ class NBFFConverter {
 		})
 	}
 }
-
-export default NBFFConverter
