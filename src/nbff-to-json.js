@@ -135,4 +135,4 @@ async function nbffToJSON(nbffString, midFunction, model) {
 	return { level: 0, id: 0, numOfNodes: numOfNodes, [NBFFjsonModel.CHILDREN]: result }
 }
 
-module.exports.nbffToJSON = nbffToJSON
+export default nbffToJSON
