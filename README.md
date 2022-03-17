@@ -83,11 +83,11 @@ nbffConverter.netscapeToJSON(nbffString, midFunction?)
 	.then((result) => console.log(result))
 ```
 
-#### The values inside the `Promise` look like:
+##### The values inside the `Promise` look like:
 
 `{ level: Number, id: Number, numOfNodes: Number, [NBFFjsonModel.CHILDREN]: Array }`
 
-#### The `midFunction` parameter looks like:
+##### The `midFunction` parameter looks like:
 
 `(node: NBFFjsonModelNode) => void | any | Promise`
 
@@ -100,7 +100,7 @@ nbffConverter.JSONToNetscape(jsonTree, header?, tabSpaces?)
 	.then((result) => console.log(result))
 ```
 
-#### The values inside the `Promise` look like:
+##### The values inside the `Promise` look like:
 
 `{ nbffStr: String, numOfNodes: Number }`
 
