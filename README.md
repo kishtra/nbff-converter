@@ -267,29 +267,28 @@ _dummy.json_
 
 ```JSON
 {
-	"content": [
-		{
-			"name": "dummy folder 1",
-			"content": [
-				{ "shortcut": "http://dummyURL.dne", "name": "Does not exist" },
-				{
-					"name": "dummy folder 2",
-					"content": [
-						{ "shortcut": "http://dummyURL.idne", "name": "It does not exist" }
-					]
-				}
-			]
-		},
-		{ "shortcut": "http://dummyURL.sdne", "name": "Still does not exist" },
-		{
-			"name": "dummy folder 3",
-			"content": [
-				{ "shortcut": "http://dummyURL.nidne", "name": "No, it does not exist" }
-			]
-		}
-	]
+    "content": [
+        {
+            "name": "dummy folder 1",
+            "content": [
+                { "shortcut": "http://dummyURL.dne", "name": "Does not exist" },
+                {
+                    "name": "dummy folder 2",
+                    "content": [
+                        { "shortcut": "http://dummyURL.idne", "name": "It does not exist" }
+                    ]
+                }
+            ]
+        },
+        { "shortcut": "http://dummyURL.sdne", "name": "Still does not exist" },
+        {
+            "name": "dummy folder 3",
+            "content": [
+                { "shortcut": "http://dummyURL.nidne", "name": "No, it does not exist" }
+            ]
+        }
+    ]
 }
-
 ```
 
 _convert-to-nbff.js_
