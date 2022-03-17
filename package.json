@@ -1,6 +1,6 @@
 {
 	"name": "nbff-converter",
-	"version": "1.0.2",
+	"version": "1.0.3-0",
 	"type": "module",
 	"description": "Netscape Bookmark File Format Converter",
 	"main": "src/nbff-converter.js",
