@@ -49,7 +49,7 @@ npm install nbff-converter
 ### Import
 
 ```javascript
-import NBFFConverter from 'nbff-converter'
+const NBFFConverter = require('nbff-converter')
 ```
 
 ## Usage

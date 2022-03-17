@@ -64,4 +64,4 @@ function returnAsElementString(jsonNode, tabNum, tabSpaces) {
 	}
 }
 
-export default jsonToNBFF
+module.exports.jsonToNBFF = jsonToNBFF
