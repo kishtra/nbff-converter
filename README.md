@@ -160,8 +160,8 @@ _dummy.html_
 _convert-to-json.js_
 
 ```javascript
-import fs from 'fs'
-import NBFFConverter from 'nbff-converter'
+const fs = require('fs')
+const NBFFConverter = require('nbff-converter')
 
 const nbffString = fs.readFileSync('./dummy.html', 'utf8')
 const nbffConverterDefault = new NBFFConverter()
@@ -294,8 +294,8 @@ _dummy.json_
 _convert-to-nbff.js_
 
 ```javascript
-import fs from 'fs'
-import NBFFConverter from 'nbff-converter'
+const fs = require('fs')
+const NBFFConverter = require('nbff-converter')
 
 const jsonString = fs.readFileSync('./dummy.json', 'utf8')
 const jsonData = JSON.parse(jsonString)
