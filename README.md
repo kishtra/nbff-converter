@@ -1,6 +1,6 @@
 # Netscape Bookmark File Format Converter
 
-This is an _independent, promise-based, Vanilla JS_ tool used for converting between [_Netscape Bookmark File Format_](<https://docs.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/aa753582(v=vs.85)>) and [_JSON_](https://en.wikipedia.org/wiki/JSON).
+This is an _independent, promise-based_ tool used for converting between [_Netscape Bookmark File Format_](<https://docs.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/aa753582(v=vs.85)>) and [_JSON_](https://en.wikipedia.org/wiki/JSON).
 
 ## Table of Contents
 
@@ -83,20 +83,20 @@ nbffConverter.netscapeToJSON(nbffString, midFunction?)
 	.then((result) => console.log(result))
 ```
 
-##### The values inside the `Promise` look like:
-
-`{ level: Number, id: Number, numOfNodes: Number, [NBFFjsonModel.CHILDREN]: Array }`
-
 ##### The `midFunction` parameter looks like:
 
 `(node: NBFFjsonModelNode) => void | any | Promise`
 
 > ##### **Tip**: When passing a method as `midFunction`, you can [**bind**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind) its `this`.
 
+##### The values inside the `Promise` look like:
+
+`{ level: Number, id: Number, numOfNodes: Number, [NBFFjsonModel.CHILDREN]: Array }`
+
 -   #### JSON to NBFF
 
 ```javascript
-nbffConverter.JSONToNetscape(jsonTree, header?, tabSpaces?)
+nbffConverter.jsonToNetscape(jsonTree, header?, tabSpaces?)
 	.then((result) => console.log(result))
 ```
 
@@ -267,14 +267,14 @@ _dummy.json_
 
 ```JSON
 {
-    "content": [
+    "contents": [
         {
             "name": "dummy folder 1",
-            "content": [
+            "contents": [
                 { "shortcut": "http://dummyURL.dne", "name": "Does not exist" },
                 {
                     "name": "dummy folder 2",
-                    "content": [
+                    "contents": [
                         { "shortcut": "http://dummyURL.idne", "name": "It does not exist" }
                     ]
                 }
@@ -283,7 +283,7 @@ _dummy.json_
         { "shortcut": "http://dummyURL.sdne", "name": "Still does not exist" },
         {
             "name": "dummy folder 3",
-            "content": [
+            "contents": [
                 { "shortcut": "http://dummyURL.nidne", "name": "No, it does not exist" }
             ]
         }
@@ -300,7 +300,7 @@ const NBFFConverter = require('nbff-converter')
 const jsonString = fs.readFileSync('./dummy.json', 'utf8')
 const jsonData = JSON.parse(jsonString)
 
-const myCustomModel = { CHILDREN: 'content', INNER_TEXT: 'name', HREF: 'shortcut' }
+const myCustomModel = { CHILDREN: 'contents', INNER_TEXT: 'name', HREF: 'shortcut' }
 const nbffConverterCustom = new NBFFConverter(myCustomModel)
 
 nbffConverterCustom.jsonToNetscape(jsonData, true, 4).then((result) => {

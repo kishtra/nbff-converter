@@ -1,7 +1,7 @@
 // TO DO: fix exception throwing hell
 
 /**
- * @module Netscape Bookmark File Format converter.
+ * @module NBFFConverter Netscape Bookmark File Format converter.
  */
 
 const { jsonToNBFF } = require('./json-to-nbff.js')
@@ -37,7 +37,7 @@ module.exports = class NBFFConverter {
 	 * {@link https://github.com/kishtra/nbff-converter/blob/main/README.md documentation}.
 	 *
 	 * @param {Object} NBFFjsonModel Defines created/expected JSON node key names.
-	 * Default property values are:
+	 * Default values are:
 	 * - CHILDREN: 'children'
 	 * - INNER_TEXT: 'title'
 	 * - HREF: 'url'
