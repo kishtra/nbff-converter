@@ -36,7 +36,7 @@ This is an _independent, promise-based_ tool used for converting between [_Netsc
 ### Configurability
 
 -   Change created/expected JSON node property names
--   Pass a custom JSON node processing midFunction
+-   Pass a custom JSON node processing `midFunction`
 
 ## Setup
 
